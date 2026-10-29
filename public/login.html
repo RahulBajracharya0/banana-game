@@ -2,16 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Banana Game - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banana game - Log in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Banana Game</h1>
-  <input id="username" placeholder="Username"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-  <button id="login">Log in</button>
-  <button id="register">Register</button>
-  <p id="message"></p>
+  <div class="auth">
+    <section class="auth-hero">
+      <div class="brand"><span class="peel" style="background:var(--ink)" aria-hidden="true"></span>Banana game</div>
+      <p class="sample" aria-hidden="true">4 + <span class="peel"></span> = 9</p>
+      <h1>Find the banana's number.</h1>
+      <p>You have 30 seconds. Solve as many puzzles as you can and climb the leaderboard.</p>
+    </section>
+
+    <section class="auth-form">
+      <div class="auth-card">
+        <h2>Join the game</h2>
+        <p class="hint">Log in, or create an account in one step.</p>
+
+        <label for="username">Username</label>
+        <input id="username" class="field" autocomplete="username">
+
+        <label for="password">Password</label>
+        <input id="password" class="field" type="password" autocomplete="current-password">
+
+        <div class="auth-actions">
+          <button id="login" class="primary">Log in</button>
+          <button id="register" class="secondary">Create account</button>
+        </div>
+        <p id="message" class="message" role="alert"></p>
+      </div>
+    </section>
+  </div>
   <script src="login.js"></script>
 </body>
 </html>

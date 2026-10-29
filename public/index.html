@@ -2,23 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Banana Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banana game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Banana Game</h1>
-  <p>Player: <span id="username"></span> <button id="logout">Log out</button></p>
-  <p>Score: <span id="score">0</span> | Time left: <span id="timer">30</span>s</p>
+  <header class="top">
+    <div class="brand"><span class="peel" aria-hidden="true"></span>Banana game</div>
+    <div class="who">
+      <span id="username"></span>
+      <button id="logout" class="ghost">Log out</button>
+    </div>
+  </header>
 
-  <img id="puzzle" alt="Puzzle" width="500">
-  <br>
-  <input type="number" id="answer" placeholder="Your answer">
-  <button id="submit">Submit</button>
-  <p id="message"></p>
-  <button id="playAgain" style="display:none">Play again</button>
+  <main class="stage">
+    <section class="board">
+      <div class="clock"><div id="clockFill"></div></div>
+      <div class="board-body">
+        <p class="prompt">Each banana hides a digit. Type the digit that makes every equation true.</p>
 
-  <h3>Top scores</h3>
-  <ol id="leaderboard"></ol>
+        <div class="puzzle-wrap">
+          <img id="puzzle" class="loading" alt="Equation puzzle with banana symbols">
+        </div>
+
+        <div class="answer-row" id="answerRow">
+          <input type="number" id="answer" placeholder="Banana digit" aria-label="Your answer">
+          <button id="submit" class="primary">Check answer</button>
+        </div>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="card">
+        <span class="stat-label">Puzzles solved</span>
+        <span id="score" class="big">0</span>
+      </div>
+      <div class="card time-row">
+        <span class="stat-label">Time left</span>
+        <strong><span id="timer">30</span>s</strong>
+      </div>
+      <div class="card">
+        <h2>Top players</h2>
+        <ol id="leaderboard"></ol>
+      </div>
+    </aside>
+  </main>
+
+  <div id="overlay" class="overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="overTitle">
+      <h2 id="overTitle">Time's up</h2>
+      <p class="final" id="finalScore">0</p>
+      <p class="sub">puzzles solved</p>
+      <button id="playAgain" class="primary">Play again</button>
+    </div>
+  </div>
 
   <script src="game.js"></script>
 </body>
