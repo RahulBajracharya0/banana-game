@@ -1,8 +1,9 @@
-// Express server: sessions (cookies), auth routes, and a protected puzzle route
+// Express server: sessions (cookies), auth routes, scores, and a protected puzzle route
 const express = require("express");
 const session = require("express-session");
 const { getPuzzle } = require("./services/bananaApi");
 const authRoutes = require("./routes/auth");
+const scoreRoutes = require("./routes/scores");
 
 const app = express();
 const PORT = 3000;
@@ -17,6 +18,7 @@ app.use(session({
 app.use(express.static("public"));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/scores", scoreRoutes);
 
 function requireLogin(req, res, next) {
   if (!req.session.userId) return res.status(401).json({ error: "Please log in" });

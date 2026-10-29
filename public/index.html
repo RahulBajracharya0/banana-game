@@ -10,11 +10,15 @@
   <p>Player: <span id="username"></span> <button id="logout">Log out</button></p>
   <p>Score: <span id="score">0</span> | Time left: <span id="timer">30</span>s</p>
 
-  <img id="puzzle" alt="Puzzle" width="400">
+  <img id="puzzle" alt="Puzzle" width="500">
   <br>
   <input type="number" id="answer" placeholder="Your answer">
   <button id="submit">Submit</button>
   <p id="message"></p>
+  <button id="playAgain" style="display:none">Play again</button>
+
+  <h3>Top scores</h3>
+  <ol id="leaderboard"></ol>
 
   <script src="game.js"></script>
 </body>
