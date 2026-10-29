@@ -1,16 +1,31 @@
-// Basic Express server: serves the frontend and exposes a puzzle route
+// Express server: sessions (cookies), auth routes, and a protected puzzle route
 const express = require("express");
+const session = require("express-session");
 const { getPuzzle } = require("./services/bananaApi");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
+app.use(session({
+  secret: "change-this-to-a-long-random-string",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour
+}));
 app.use(express.static("public"));
 
-app.get("/api/puzzle", async (req, res) => {
+app.use("/api/auth", authRoutes);
+
+function requireLogin(req, res, next) {
+  if (!req.session.userId) return res.status(401).json({ error: "Please log in" });
+  next();
+}
+
+app.get("/api/puzzle", requireLogin, async (req, res) => {
   try {
-    const puzzle = await getPuzzle();
-    res.json(puzzle);
+    res.json(await getPuzzle());
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

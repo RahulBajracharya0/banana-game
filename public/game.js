@@ -45,4 +45,20 @@ const timer = setInterval(() => {
   }
 }, 1000);
 
-loadPuzzle();
+// Check login first; send to the login page if there is no session
+document.getElementById("logout").addEventListener("click", async () => {
+  await fetch("/api/auth/logout", { method: "POST" });
+  window.location.href = "login.html";
+});
+
+async function init() {
+  const res = await fetch("/api/auth/me");
+  if (!res.ok) {
+    window.location.href = "login.html";
+    return;
+  }
+  const me = await res.json();
+  document.getElementById("username").textContent = me.username;
+  loadPuzzle();
+}
+init();
