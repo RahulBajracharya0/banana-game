@@ -17,4 +17,27 @@ function topScores(limit = 5) {
   `).all(limit);
 }
 
-module.exports = { save, topScores };
+function statsFor(userId) {
+  return db.prepare(
+    "SELECT MAX(score) AS best, COUNT(*) AS games FROM scores WHERE user_id = ?"
+  ).get(userId);
+}
+
+function rankFor(userId) {
+  const mine = statsFor(userId).best;
+  if (mine === null) return null;
+  const row = db.prepare(`
+    SELECT COUNT(*) AS higher FROM (
+      SELECT MAX(score) AS best FROM scores GROUP BY user_id
+    ) WHERE best > ?
+  `).get(mine);
+  return row.higher + 1;
+}
+
+function recentFor(userId, limit = 5) {
+  return db.prepare(
+    "SELECT score, played_at FROM scores WHERE user_id = ? ORDER BY id DESC LIMIT ?"
+  ).all(userId, limit);
+}
+
+module.exports = { save, topScores, statsFor, rankFor, recentFor };

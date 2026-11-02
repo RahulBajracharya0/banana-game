@@ -15,6 +15,7 @@ let streak = 0;
 let hintsLeft = MAX_HINTS;
 let hintLevel = 0; // how many hints used on the current puzzle
 let currentUser = "";
+let bestScore = 0; // the player's saved personal best
 
 const el = (id) => document.getElementById(id);
 const puzzleImg = el("puzzle");
@@ -37,6 +38,11 @@ function playAnimation(element, className) {
 function showScore() {
   el("score").textContent = score;
   playAnimation(el("score"), "bump");
+  // Beating your saved best during the game updates the Best card live
+  if (score > bestScore) {
+    el("best").textContent = score;
+    el("best").classList.add("record");
+  }
 }
 
 function showLives() {
@@ -125,12 +131,58 @@ function giveHint() {
 }
 
 async function saveScore() {
-  await fetch("/api/scores", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ score })
-  });
+  const bestLine = el("bestLine");
+  try {
+    const res = await fetch("/api/scores", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ score })
+    });
+    if (!res.ok) throw new Error("save failed");
+    const data = await res.json();
+    if (data.isNewBest) {
+      bestLine.textContent = "New high score!";
+      bestLine.className = "best-line new-best";
+    } else {
+      bestLine.textContent = "Your best: " + data.best + (data.rank ? "  (rank #" + data.rank + ")" : "");
+      bestLine.className = "best-line";
+    }
+  } catch (err) {
+    bestLine.textContent = "Could not save your score.";
+    bestLine.className = "best-line";
+  }
   loadLeaderboard();
+  loadMyStats();
+}
+
+// The player's own best score, games played and recent games
+async function loadMyStats() {
+  const res = await fetch("/api/scores/me");
+  if (!res.ok) return;
+  const me = await res.json();
+  bestScore = me.best;
+  el("best").textContent = me.best;
+  el("best").classList.remove("record");
+
+  el("myStats").textContent = me.games === 0
+    ? "Play a game to see it here."
+    : "Games played: " + me.games + (me.rank ? " | Rank #" + me.rank : "");
+
+  const list = el("recent");
+  list.innerHTML = "";
+  me.recent.forEach((g) => {
+    const li = document.createElement("li");
+    if (g.score === me.best && me.best > 0) li.className = "top";
+    const when = document.createElement("span");
+    when.className = "when";
+    // SQLite stores UTC as "YYYY-MM-DD HH:MM:SS"; convert it to the player's local date
+    when.textContent = new Date(g.played_at.replace(" ", "T") + "Z").toLocaleDateString();
+    const pts = document.createElement("span");
+    pts.className = "pts";
+    pts.textContent = g.score;
+    li.append(when, pts);
+    list.appendChild(li);
+  });
 }
 
 async function loadLeaderboard() {
@@ -226,6 +278,7 @@ async function init() {
   el("username").textContent = me.username;
   showLives();
   loadLeaderboard();
+  loadMyStats();
   await loadPuzzle();
 }
 init();

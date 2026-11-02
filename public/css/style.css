@@ -246,6 +246,30 @@ button { font-family: inherit; }
 #leaderboard li.me { background: #d9f5df; border-radius: var(--wob); border-bottom-color: transparent; }
 .empty { margin: 0; color: var(--muted); }
 
+#best.record { color: var(--good); animation: bump 0.3s; }
+#best::before { content: "\2605  "; color: #e0a800; }
+
+.recent { list-style: none; margin: 0; padding: 0; }
+.recent li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 8px;
+  border-bottom: 2px dashed #c9c9d6;
+}
+.recent li:last-child { border-bottom: 0; }
+.recent .when { color: var(--muted); font-size: 1.05rem; }
+.recent .pts { font-family: var(--hand); font-size: 1.4rem; color: var(--marker-red); }
+.recent li.top .pts::after { content: " \2605"; color: #e0a800; }
+
+.best-line { min-height: 1.4em; margin: 0 0 22px; font-size: 1.35rem; }
+.best-line.new-best {
+  font-family: var(--hand);
+  font-size: 1.9rem;
+  color: var(--good);
+  animation: bump 0.5s;
+}
+
 /* ---------- Game over ---------- */
 .overlay {
   position: fixed;

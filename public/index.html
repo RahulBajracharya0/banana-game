@@ -59,9 +59,12 @@
         <span id="score" class="big">0</span>
       </div>
       <div class="card time-row">
-  <span class="stat-label">Lives</span>
-  <strong id="lives">3</strong>
-</div>
+        <span class="stat-label">Lives</span>
+        <strong id="lives">3</strong>
+      </div>
+      <div class="card time-row">
+        <span class="stat-label">Your best</span>
+        <strong id="best">0</strong>
       </div>
       <div class="card rules">
         <details open>
@@ -79,6 +82,11 @@
         <h2>Top players</h2>
         <ol id="leaderboard"></ol>
       </div>
+      <div class="card">
+        <h2>Your last games</h2>
+        <p id="myStats" class="stat-label"></p>
+        <ol id="recent" class="recent"></ol>
+      </div>
     </aside>
   </main>
 
@@ -87,6 +95,7 @@
       <h2 id="overTitle">Game over</h2>
       <p class="final" id="finalScore">0</p>
       <p class="sub">points</p>
+      <p id="bestLine" class="best-line"></p>
       <button id="playAgain" class="primary">Play again</button>
     </div>
   </div>
