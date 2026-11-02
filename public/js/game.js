@@ -1,12 +1,17 @@
-// Event-driven game logic: clicks, Enter key, a one-second timer, and score saving.
+// Event-driven game logic: clicks, Enter key, points, lives, hints and score saving.
 // Written with help from Claude (Anthropic), adapted by me.
-const ROUND_SECONDS = 30;
-let score = 0;
-let timeLeft = ROUND_SECONDS;
-let currentSolution = null;
-let timer = null;
+const MAX_LIVES = 3;
+const POINTS_PER_ANSWER = 10;
+const STREAK_BONUS = 5;        // extra points for each answer in a row
+const MAX_STREAK_BONUS = 15;   // the streak bonus never goes above this
 const MAX_HINTS = 3;
-const HINT_PENALTY_SECONDS = 3;
+const HINT_COST_POINTS = 2;
+
+let score = 0;
+let lives = MAX_LIVES;
+let gameOver = false;
+let currentSolution = null;
+let streak = 0;
 let hintsLeft = MAX_HINTS;
 let hintLevel = 0; // how many hints used on the current puzzle
 let currentUser = "";
@@ -16,7 +21,6 @@ const puzzleImg = el("puzzle");
 const answerInput = el("answer");
 const message = el("message");
 const answerRow = el("answerRow");
-const clockFill = el("clockFill");
 
 function setMessage(text, kind) {
   message.textContent = text;
@@ -28,6 +32,15 @@ function playAnimation(element, className) {
   element.classList.remove(className);
   void element.offsetWidth;
   element.classList.add(className);
+}
+
+function showScore() {
+  el("score").textContent = score;
+  playAnimation(el("score"), "bump");
+}
+
+function showLives() {
+  el("lives").textContent = lives;
 }
 
 async function loadPuzzle() {
@@ -43,7 +56,7 @@ async function loadPuzzle() {
   }
   const puzzle = await res.json();
   currentSolution = puzzle.solution;
-    hintLevel = 0;
+  hintLevel = 0;
   el("hintText").textContent = "";
   await new Promise((resolve) => {
     puzzleImg.onload = puzzleImg.onerror = () => {
@@ -57,21 +70,60 @@ async function loadPuzzle() {
 }
 
 function checkAnswer() {
-  if (timeLeft <= 0) return;
+  if (gameOver) return;
   if (answerInput.value === "") {
     setMessage("Type a number first.", "bad");
     return;
   }
   if (Number(answerInput.value) === currentSolution) {
-    score++;
-    el("score").textContent = score;
-    playAnimation(el("score"), "bump");
-    setMessage("Correct. Here's the next one.", "good");
+    streak++;
+    const bonus = Math.min((streak - 1) * STREAK_BONUS, MAX_STREAK_BONUS);
+    const gained = POINTS_PER_ANSWER + bonus;
+    score += gained;
+    showScore();
+    setMessage(
+      "Correct! +" + gained + " points" + (streak > 1 ? " (streak x" + streak + ")" : ""),
+      "good"
+    );
   } else {
+    streak = 0;
+    lives--;
+    showLives();
     playAnimation(answerRow, "shake");
-    setMessage("Not quite. The last banana was " + currentSolution + ".", "bad");
+    setMessage("Not quite. The last banana was " + currentSolution + ". Lives left: " + lives, "bad");
+    if (lives <= 0) {
+      endGame();
+      return;
+    }
   }
   loadPuzzle();
+}
+
+// Hint: costs points and uses one of your hint tokens.
+// Level 1 = even or odd, level 2 = a range of five numbers.
+function giveHint() {
+  if (gameOver || currentSolution === null) return;
+  if (hintsLeft <= 0) return;
+  if (hintLevel >= 2) {
+    el("hintText").textContent = "No more hints for this puzzle.";
+    return;
+  }
+  hintLevel++;
+  hintsLeft--;
+  score = Math.max(0, score - HINT_COST_POINTS);
+  showScore();
+
+  let text;
+  if (hintLevel === 1) {
+    text = "Hint: the number is " + (currentSolution % 2 === 0 ? "even" : "odd") + ".";
+  } else {
+    const low = Math.max(0, currentSolution - 2);
+    text = "Hint: the number is between " + low + " and " + (low + 4) + ".";
+  }
+  el("hintText").textContent = text + " (-" + HINT_COST_POINTS + " points)";
+  el("hint").textContent = "Hint (" + hintsLeft + ")";
+  el("hint").disabled = hintsLeft <= 0;
+  answerInput.focus();
 }
 
 async function saveScore() {
@@ -109,60 +161,20 @@ async function loadLeaderboard() {
   });
 }
 
-function updateClock() {
-  el("timer").textContent = timeLeft;
-  clockFill.style.width = (timeLeft / ROUND_SECONDS) * 100 + "%";
-  clockFill.classList.toggle("low", timeLeft <= 10);
-}
-
 function endGame() {
-  clearInterval(timer);
+  gameOver = true;
   el("submit").disabled = true;
-  answerInput.disabled = true;
   el("hint").disabled = true;
+  answerInput.disabled = true;
   el("finalScore").textContent = score;
   el("overlay").hidden = false;
   el("playAgain").focus();
   saveScore();
 }
 
-function startTimer() {
-  updateClock();
-  // Event: fires every second
-  timer = setInterval(() => {
-    timeLeft--;
-    updateClock();
-    if (timeLeft <= 0) endGame();
-  }, 1000);
-}
-
-// Hint: costs a few seconds and a hint token. Level 1 = even/odd, level 2 = a range.
-function giveHint() {
-  if (timeLeft <= 0 || currentSolution === null) return;
-  if (hintLevel >= 2) {
-    el("hintText").textContent = "No more hints for this puzzle.";
-    return;
-  }
-  hintLevel++;
-  hintsLeft--;
-  timeLeft = Math.max(1, timeLeft - HINT_PENALTY_SECONDS);
-  updateClock();
-
-  let text;
-  if (hintLevel === 1) {
-    text = "Hint: the number is " + (currentSolution % 2 === 0 ? "even" : "odd") + ".";
-  } else {
-    const low = Math.max(0, currentSolution - 2);
-    text = "Hint: the number is between " + low + " and " + (low + 4) + ".";
-  }
-  el("hintText").textContent = text + " (-" + HINT_PENALTY_SECONDS + "s)";
-  el("hint").textContent = "Hint (" + hintsLeft + ")";
-  el("hint").disabled = hintsLeft <= 0;
-  answerInput.focus();
-}
-
 // Event: button click
 el("submit").addEventListener("click", checkAnswer);
+
 // Event: hint button click
 el("hint").addEventListener("click", giveHint);
 
@@ -190,8 +202,8 @@ async function init() {
   const me = await res.json();
   currentUser = me.username;
   el("username").textContent = me.username;
+  showLives();
   loadLeaderboard();
   await loadPuzzle();
-  startTimer();
 }
 init();

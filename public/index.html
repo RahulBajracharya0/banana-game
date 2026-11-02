@@ -21,7 +21,7 @@
 
   <main class="stage">
     <section class="board">
-      <div class="clock"><div id="clockFill"></div></div>
+      
       <div class="board-body">
         <p class="prompt">Each banana hides a digit. Type the digit that makes every equation true.</p>
 
@@ -32,7 +32,7 @@
         <div class="answer-row" id="answerRow">
           <input type="number" id="answer" placeholder="Banana digit" aria-label="Your answer">
           <button id="submit" class="primary">Check answer</button>
-          <button id="hint" class="secondary">Hint (3)</button> 
+          <button id="hint" class="secondary">Hint (3)</button>
         </div>
         <p id="hintText" class="hint-text"></p>
         <p id="message" class="message" role="status" aria-live="polite"></p>
@@ -41,22 +41,19 @@
 
     <aside class="side">
       <div class="card">
-        <span class="stat-label">Puzzles solved</span>
+        <span class="stat-label">Points</span>
         <span id="score" class="big">0</span>
       </div>
       <div class="card time-row">
-        <span class="stat-label">Time left</span>
-        <strong><span id="timer">30</span>s</strong>
+  <span class="stat-label">Lives</span>
+  <strong id="lives">3</strong>
+</div>
       </div>
-            <div class="card rules">
+      <div class="card rules">
         <details open>
           <summary>How to play</summary>
           <ol>
-            <li>You have 30 seconds per round.</li>
-            <li>Each banana hides a digit. Find the digit that makes every equation true.</li>
-            <li>Type it and press Enter or click Check answer.</li>
-            <li>Each correct answer scores 1 point. Wrong answers score 0, with no penalty.</li>
-            <li>When time runs out, your score is saved. The leaderboard shows each player's best round.</li>
+            <li>When the game ends, your points are saved. The leaderboard shows each player's best game.</li>
           </ol>
         </details>
       </div>
@@ -69,9 +66,9 @@
 
   <div id="overlay" class="overlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="overTitle">
-      <h2 id="overTitle">Time's up</h2>
+      <h2 id="overTitle">Game over</h2>
       <p class="final" id="finalScore">0</p>
-      <p class="sub">puzzles solved</p>
+      <p class="sub">points</p>
       <button id="playAgain" class="primary">Play again</button>
     </div>
   </div>
