@@ -1,5 +1,3 @@
-// Central settings in one place. Values can be overridden with environment variables.
-// Written with help from Claude (Anthropic), adapted by me.
 const path = require("path");
 
 module.exports = {

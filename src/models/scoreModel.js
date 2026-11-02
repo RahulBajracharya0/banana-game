@@ -1,5 +1,3 @@
-// Database queries for scores.
-// Written with help from Claude (Anthropic), adapted by me.
 const db = require("../db/database");
 
 function save(userId, score) {

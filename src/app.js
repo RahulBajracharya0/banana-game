@@ -1,5 +1,3 @@
-// Builds the Express application: middleware first, then routes.
-// Written with help from Claude (Anthropic), adapted by me.
 const path = require("path");
 const express = require("express");
 const session = require("express-session");

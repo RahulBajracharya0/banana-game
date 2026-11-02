@@ -1,5 +1,3 @@
-// Save a player's score and fetch the leaderboard.
-// Written with help from Claude (Anthropic), adapted by me.
 const express = require("express");
 const scores = require("../models/scoreModel");
 const requireLogin = require("../middleware/requireLogin");

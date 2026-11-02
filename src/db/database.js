@@ -1,5 +1,5 @@
-// SQLite connection and table creation (better-sqlite3 library).
-// Written with help from Claude (Anthropic), adapted by me.
+// SQLite connection and table creation
+
 const fs = require("fs");
 const path = require("path");
 const Database = require("better-sqlite3");

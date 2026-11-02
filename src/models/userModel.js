@@ -1,5 +1,3 @@
-// Database queries for users. Routes never write SQL themselves.
-// Written with help from Claude (Anthropic), adapted by me.
 const db = require("../db/database");
 
 function findByUsername(username) {

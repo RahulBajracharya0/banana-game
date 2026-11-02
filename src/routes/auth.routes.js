@@ -1,5 +1,3 @@
-// Registration, login, logout. Passwords are hashed with bcrypt, never stored in plain text.
-// Written with help from Claude (Anthropic), adapted by me.
 const express = require("express");
 const bcrypt = require("bcrypt");
 const users = require("../models/userModel");

@@ -1,9 +1,7 @@
-// Event-driven game logic: clicks, Enter key, points, lives, hints and score saving.
-// Written with help from Claude (Anthropic), adapted by me.
 const MAX_LIVES = 3;
 const POINTS_PER_ANSWER = 10;
-const STREAK_BONUS = 5;        // extra points for each answer in a row
-const MAX_STREAK_BONUS = 15;   // the streak bonus never goes above this
+const STREAK_BONUS = 5;        
+const MAX_STREAK_BONUS = 15;   
 const MAX_HINTS = 3;
 const HINT_COST_POINTS = 2;
 
@@ -104,8 +102,7 @@ function checkAnswer() {
   loadPuzzle();
 }
 
-// Hint: costs points and uses one of your hint tokens.
-// Level 1 = even or odd, level 2 = a range of five numbers.
+
 function giveHint() {
   if (gameOver || currentSolution === null) return;
   if (hintsLeft <= 0) return;

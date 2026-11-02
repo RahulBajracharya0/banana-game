@@ -1,4 +1,4 @@
-/* Main styles for the Banana Game interface. */
+
 
 :root {
   --paper: #fffef7;
@@ -25,7 +25,7 @@
   --banana-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M14 8c-3 26 14 46 42 44 3 0 4-5 0-6-22-1-34-16-34-36 0-4-8-6-8-2z' fill='%23ffe14d' stroke='%232a2a35' stroke-width='3.5' stroke-linejoin='round'/%3E%3Cpath d='M12 8l-1-5h6l1 5z' fill='%232a2a35'/%3E%3Cpath d='M20 18c2 14 10 24 24 28' fill='none' stroke='%232a2a35' stroke-width='2' stroke-linecap='round' opacity='.5'/%3E%3C/svg%3E");
 }
 
-/* ---------- Base ---------- */
+/* Base*/
 * { box-sizing: border-box; }
 
 body {
@@ -56,7 +56,7 @@ button { font-family: inherit; }
 .brand:hover .peel { animation: wiggle 0.5s ease-in-out; }
 @keyframes wiggle { 25% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } }
 
-/* ---------- Top bar ---------- */
+/*Top bar*/
 .top {
   display: flex;
   justify-content: space-between;
@@ -70,7 +70,7 @@ button { font-family: inherit; }
 .brand { display: flex; align-items: center; gap: 10px; font-size: 1.8rem; color: var(--pencil); }
 .who { display: flex; align-items: center; gap: 14px; font-size: 1.15rem; }
 
-/* ---------- Game layout ---------- */
+/*Game layout*/
 .stage {
   width: 100%;
   max-width: 1180px;
@@ -95,7 +95,7 @@ button { font-family: inherit; }
   }
 }
 
-/* ---------- Board ---------- */
+/*Board */
 .board {
   position: relative;
   display: flex;
@@ -158,7 +158,7 @@ button { font-family: inherit; }
 #answer:focus { outline: none; }
 #answer::placeholder { color: #b9b6a6; }
 
-/* ---------- Buttons ---------- */
+/* Buttons*/
 .primary, .secondary, .ghost, .key {
   position: relative;
   font-family: var(--hand);
@@ -192,7 +192,7 @@ button { font-family: inherit; }
   80% { transform: translateX(5px); }
 }
 
-/* ---------- Number pad: 3 columns x 4 rows, like a phone keypad ---------- */
+/* numpad */
 .numpad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -214,7 +214,7 @@ button { font-family: inherit; }
 .key-clear { background: var(--red-soft); }
 .key-back { background: var(--blue-soft); }
 
-/* ---------- Sidebar: 3 small stat cards, rules, then two lists side by side ---------- */
+/* side bars*/
 .side {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -257,7 +257,7 @@ button { font-family: inherit; }
 .hint-text:not(:empty) { padding: 3px 12px; background: var(--note); border: 2px dashed var(--pencil); border-radius: var(--wob); color: var(--pencil); }
 #hint:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ---------- Leaderboard ---------- */
+/*Leaderboard  */
 #leaderboard { list-style: none; margin: 0; padding: 0; counter-reset: rank; }
 #leaderboard li {
   counter-increment: rank;
@@ -289,7 +289,7 @@ button { font-family: inherit; }
 #leaderboard li.me { background: #d9f5df; border-radius: var(--wob); border-bottom-color: transparent; }
 .empty { margin: 0; color: var(--muted); }
 
-/* ---------- High score / last games ---------- */
+/*High score / last games*/
 #best.record { color: var(--good); animation: bump 0.3s; }
 #best::before { content: "\2605  "; color: #e0a800; }
 
@@ -365,7 +365,7 @@ button { font-family: inherit; }
 .modal .sub { margin: 10px 0 12px; color: var(--muted); font-size: 1.3rem; }
 .modal-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-/* ---------- Login ---------- */
+/*Login*/
 .auth {
   min-height: 100vh;
   max-width: 1040px;
@@ -451,7 +451,7 @@ button { font-family: inherit; }
 .auth-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .auth-card .message { color: var(--bad); }
 
-/* ---------- Responsive ---------- */
+/*Responsive */
 /* Short laptop screens (e.g. 125% Windows scaling): keep the 3x4 pad, drop the intro line */
 @media (min-width: 861px) and (max-height: 760px) {
   .prompt { display: none; }
