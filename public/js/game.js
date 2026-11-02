@@ -5,6 +5,10 @@ let score = 0;
 let timeLeft = ROUND_SECONDS;
 let currentSolution = null;
 let timer = null;
+const MAX_HINTS = 3;
+const HINT_PENALTY_SECONDS = 3;
+let hintsLeft = MAX_HINTS;
+let hintLevel = 0; // how many hints used on the current puzzle
 let currentUser = "";
 
 const el = (id) => document.getElementById(id);
@@ -39,6 +43,8 @@ async function loadPuzzle() {
   }
   const puzzle = await res.json();
   currentSolution = puzzle.solution;
+    hintLevel = 0;
+  el("hintText").textContent = "";
   await new Promise((resolve) => {
     puzzleImg.onload = puzzleImg.onerror = () => {
       puzzleImg.classList.remove("loading");
@@ -113,6 +119,7 @@ function endGame() {
   clearInterval(timer);
   el("submit").disabled = true;
   answerInput.disabled = true;
+  el("hint").disabled = true;
   el("finalScore").textContent = score;
   el("overlay").hidden = false;
   el("playAgain").focus();
@@ -129,8 +136,35 @@ function startTimer() {
   }, 1000);
 }
 
+// Hint: costs a few seconds and a hint token. Level 1 = even/odd, level 2 = a range.
+function giveHint() {
+  if (timeLeft <= 0 || currentSolution === null) return;
+  if (hintLevel >= 2) {
+    el("hintText").textContent = "No more hints for this puzzle.";
+    return;
+  }
+  hintLevel++;
+  hintsLeft--;
+  timeLeft = Math.max(1, timeLeft - HINT_PENALTY_SECONDS);
+  updateClock();
+
+  let text;
+  if (hintLevel === 1) {
+    text = "Hint: the number is " + (currentSolution % 2 === 0 ? "even" : "odd") + ".";
+  } else {
+    const low = Math.max(0, currentSolution - 2);
+    text = "Hint: the number is between " + low + " and " + (low + 4) + ".";
+  }
+  el("hintText").textContent = text + " (-" + HINT_PENALTY_SECONDS + "s)";
+  el("hint").textContent = "Hint (" + hintsLeft + ")";
+  el("hint").disabled = hintsLeft <= 0;
+  answerInput.focus();
+}
+
 // Event: button click
 el("submit").addEventListener("click", checkAnswer);
+// Event: hint button click
+el("hint").addEventListener("click", giveHint);
 
 // Event: Enter key in the answer box
 answerInput.addEventListener("keydown", (e) => {

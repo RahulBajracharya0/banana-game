@@ -270,3 +270,5 @@ button { font-family: inherit; }
 .rules summary { font-family: var(--display); font-weight: 800; font-size: 1.15rem; cursor: pointer; }
 .rules ol { margin: 10px 0 0; padding-left: 20px; line-height: 1.5; color: var(--muted); }
 .rules li { margin-bottom: 6px; }
+.hint-text { min-height: 1.4em; margin: 10px 0 0; color: var(--muted); font-style: italic; }
+#hint:disabled { opacity: 0.45; cursor: not-allowed; }
