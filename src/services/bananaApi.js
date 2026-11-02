@@ -1,5 +1,4 @@
-// Client for the external Banana API (interoperability: HTTP GET request + JSON response).
-// Written with help from Claude (Anthropic), adapted by me.
+
 const config = require("../config");
 
 async function getPuzzle() {
