@@ -1,4 +1,5 @@
 // Event-driven game logic: clicks, Enter key, a one-second timer, and score saving.
+// Written with help from Claude (Anthropic), adapted by me.
 const ROUND_SECONDS = 30;
 let score = 0;
 let timeLeft = ROUND_SECONDS;
@@ -28,8 +29,12 @@ function playAnimation(element, className) {
 async function loadPuzzle() {
   puzzleImg.classList.add("loading");
   const res = await fetch("/api/puzzle");
-  if (!res.ok) {
+  if (res.status === 401) {
     window.location.href = "login.html";
+    return;
+  }
+  if (!res.ok) {
+    setMessage("Could not load a puzzle. Check your internet connection.", "bad");
     return;
   }
   const puzzle = await res.json();

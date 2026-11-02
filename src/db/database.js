@@ -1,6 +1,12 @@
-// SQLite database setup (stores users and their scores)
+// SQLite connection and table creation (better-sqlite3 library).
+// Written with help from Claude (Anthropic), adapted by me.
+const fs = require("fs");
+const path = require("path");
 const Database = require("better-sqlite3");
-const db = new Database("game.db");
+const config = require("../config");
+
+fs.mkdirSync(path.dirname(config.dbFile), { recursive: true });
+const db = new Database(config.dbFile);
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (

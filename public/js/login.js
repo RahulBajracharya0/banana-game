@@ -1,3 +1,4 @@
+// Written with help from Claude (Anthropic), adapted by me.
 // Sends login/register requests; the server replies with a session cookie
 async function send(path) {
   const res = await fetch("/api/auth/" + path, {
