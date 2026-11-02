@@ -1,5 +1,3 @@
-// Written with help from Claude (Anthropic), adapted by me.
-// Sends login/register requests; the server replies with a session cookie
 async function send(path) {
   const res = await fetch("/api/auth/" + path, {
     method: "POST",
@@ -20,7 +18,7 @@ async function send(path) {
 document.getElementById("login").addEventListener("click", () => send("login"));
 document.getElementById("register").addEventListener("click", () => send("register"));
 
-// Pressing Enter in the password box logs in
+
 document.getElementById("password").addEventListener("keydown", (e) => {
   if (e.key === "Enter") send("login");
 });

@@ -65,8 +65,7 @@ async function loadPuzzle() {
     };
     puzzleImg.src = puzzle.question;
   });
-  answerInput.value = "";
-  answerInput.focus();
+    answerInput.value = "";
 }
 
 function checkAnswer() {
@@ -122,8 +121,7 @@ function giveHint() {
   }
   el("hintText").textContent = text + " (-" + HINT_COST_POINTS + " points)";
   el("hint").textContent = "Hint (" + hintsLeft + ")";
-  el("hint").disabled = hintsLeft <= 0;
-  answerInput.focus();
+    el("hint").disabled = hintsLeft <= 0;
 }
 
 async function saveScore() {
@@ -166,6 +164,7 @@ function endGame() {
   el("submit").disabled = true;
   el("hint").disabled = true;
   answerInput.disabled = true;
+  document.querySelectorAll(".key").forEach((k) => (k.disabled = true));
   el("finalScore").textContent = score;
   el("overlay").hidden = false;
   el("playAgain").focus();
@@ -178,9 +177,32 @@ el("submit").addEventListener("click", checkAnswer);
 // Event: hint button click
 el("hint").addEventListener("click", giveHint);
 
-// Event: Enter key in the answer box
-answerInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") checkAnswer();
+// Number pad: add a digit, clear, or delete the last one (max 2 digits)
+function pressKey(key) {
+  if (gameOver) return;
+  if (key === "clear") {
+    answerInput.value = "";
+  } else if (key === "back") {
+    answerInput.value = answerInput.value.slice(0, -1);
+  } else if (answerInput.value.length < 2) {
+    answerInput.value += key;
+  }
+}
+
+// Event: number pad buttons
+el("numpad").addEventListener("click", (e) => {
+  const btn = e.target.closest(".key");
+  if (btn) pressKey(btn.dataset.key);
+});
+
+// Event: physical keyboard still works (digits, Backspace, Enter)
+document.addEventListener("keydown", (e) => {
+  if (gameOver || !el("overlay").hidden) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (/^[0-9]$/.test(e.key)) pressKey(e.key);
+  else if (e.key === "Backspace") pressKey("back");
+  else if (e.key === "Delete" || e.key === "Escape") pressKey("clear");
+  else if (e.key === "Enter" && document.activeElement.tagName !== "BUTTON") checkAnswer();
 });
 
 // Event: play again
